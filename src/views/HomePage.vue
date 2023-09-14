@@ -7,14 +7,11 @@
     </ion-header>
 
     <ion-content :fullscreen="true">
-
       <ion-header collapse="condense">
         <ion-toolbar>
           <ion-title size="large">BLANK</ion-title>
         </ion-toolbar>
       </ion-header>
-
-      
     </ion-content>
   </ion-page>
 </template>
@@ -45,7 +42,6 @@ export  default defineComponent({
 <style scoped>
 #container {
   text-align: center;
-  
   position: absolute;
   left: 0;
   right: 0;
@@ -61,9 +57,7 @@ export  default defineComponent({
 #container p {
   font-size: 16px;
   line-height: 22px;
-  
   color: #8c8c8c;
-  
   margin: 0;
 }
 
