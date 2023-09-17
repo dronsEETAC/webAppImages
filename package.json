@@ -4,6 +4,9 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
+    "ng": "ng",
+    "start": "ng serve --ssl",
+    "ionic": "ionic serve --lab --ssl",
     "dev": "vite",
     "build": "vue-tsc && vite build",
     "preview": "vite preview",

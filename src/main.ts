@@ -1,5 +1,6 @@
 
 // https://ionic.io/ionicons
+// https://medium.com/@anmol.sinha1993/configure-angular-ionic-apps-with-open-ssl-certificate-to-run-them-securely-over-https-locally-4b2cd3ba3fc9
   
 import { createApp } from 'vue'
 import App from './App.vue'
@@ -47,8 +48,8 @@ app.provide('emitter', emitter);
 
 
 app.use(mqttVueHook, 'ws://classpip.upc.edu:8000/mqtt', {
-// //app.use(mqttVueHook, 'mqtt://localhost:8083', {
-// //app.use(mqttVueHook, 'mqtt://192.168.1.46:8000', {
+// app.use(mqttVueHook, 'mqtt://localhost:8083', {
+// app.use(mqttVueHook, 'mqtt://192.168.1.46:8000', {
 // app.use(mqttVueHook, 'mqtt://192.168.137.1:8000', {
    clean: true,
    keepalive: 60,
@@ -62,3 +63,5 @@ app.use(mqttVueHook, 'ws://classpip.upc.edu:8000/mqtt', {
 router.isReady().then(() => {
   app.mount('#app');
 });
+
+
