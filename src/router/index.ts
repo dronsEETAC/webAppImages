@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
 import HomePage from '../views/HomePage.vue';
-import CameraPage from '../views/CameraPage.vue';
+import VideoPage from '../views/VideoPage.vue';
+import PhotoPage from '../views/PhotoPage.vue';
 import TabsPage from '../views/TabsPage.vue';
 
 
@@ -16,10 +17,15 @@ const routes: Array<RouteRecordRaw> = [
         component: HomePage,
       },
       {
-        path: '/camera',
-        name: 'Camera',
-        component: CameraPage,
+        path: '/video',
+        name: 'video',
+        component: VideoPage,
       },
+      {
+        path: '/photo',
+        name: 'photo',
+        component: PhotoPage,
+      }
     ]
   },
 ]

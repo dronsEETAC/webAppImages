@@ -18,7 +18,8 @@ export default defineConfig({
     https: {
       cert: './localhost.crt',
       key: './localhost.key',
-    }
+      
+    },
   },
   /*test: {
     globals: true,

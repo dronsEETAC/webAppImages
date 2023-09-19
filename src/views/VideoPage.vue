@@ -8,10 +8,10 @@
     <ion-content>
       <ion-row>
         <ion-col col-1>
-          <ion-button style="width:100%" color="primary" @click="startVideoStream">Start video stream</ion-button>
+          <ion-button style="width:100%" color="primary" @click="startVideoStream" v-if="capturing">Start video stream</ion-button>
         </ion-col>
         <ion-col col-2>
-          <ion-button style="width:100%" color="danger" @click="stopVideoStream">Stop video stream</ion-button>
+          <ion-button style="width:100%" color="danger" @click="stopVideoStream" v-if="!capturing">Stop video stream</ion-button>
         </ion-col>
         <ion-col col-3>
           <video ref="videoElement" style="width: 100%; height: auto;"></video>
@@ -35,15 +35,18 @@ export  default defineComponent({
     IonContent,IonHeader,IonPage,IonTitle,IonToolbar, IonRow, IonCol, IonItem, IonSelect, IonSelectOption, IonList, IonButton
   }, 
 
+  data() {        
+    return{
+      capturing: false,
+    }
+  }, 
+
   setup() {
-    const videoElement = ref(null); 
-
-    // Verificar si el usuario está en un dispositivo móvil
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
 
     onMounted(() => {
 
+      let camera = undefined 
+      
       // tenemos que registrar eventos en especifico
       mqttHook.registerEvent('cameraService/IonicTutorial/videoFrame', (topic, message) => {
         
@@ -64,53 +67,12 @@ export  default defineComponent({
         };        
       })
     })
-    /**
-    async function startVideoStream(){
-      mqttHook.subscribe(["cameraService/IonicTutorial/videoFrame"], 1);
-      mqttHook.publish("IonicTutorial/cameraService/startVideoStream", "",1);
-
-      if (isMobile){
-        const constraintsMobile = {
-          video: {
-            facingMode: 'user', // Cámara frontal del dispositivo móvil
-          },
-        };
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia(constraintsMobile);
-
-          if (videoElement.value) {
-            (videoElement.value as HTMLVideoElement).srcObject = stream;
-          } else {
-            console.error('El elemento de video no se encuentra disponible.');
-          }
-        } catch (error) {
-          console.error('Error al grabar con la cámara del móvil:', error);
-        }
-
-      } else {
-        const constraintsDesktop = {
-          video: {
-            facingMode: 'user', // Cámara frontal del ordenador
-          },
-        };
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia(constraintsDesktop);
-
-          if (videoElement.value) {
-            (videoElement.value as HTMLVideoElement).srcObject = stream;
-          } else {
-            console.error('El elemento de video no se encuentra disponible.');
-          }
-        } catch (error) {
-          console.error('Error al grabar con la cámara del ordenador:', error);
-        }
-      }
-
-    }*/
 
     function startVideoStream(){
       mqttHook.subscribe(["cameraService/IonicTutorial/videoFrame"], 1);
       mqttHook.publish("IonicTutorial/cameraService/startVideoStream", "",1);
+    
+    
     }
 
     function stopVideoStream(){

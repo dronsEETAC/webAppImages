@@ -46,8 +46,8 @@ app.use(IonicVue);
 app.use(router);   
 app.provide('emitter', emitter);
 
-
-app.use(mqttVueHook, 'ws://classpip.upc.edu:8000/mqtt', {
+app.use(mqttVueHook, 'wss://classpip.upc.edu:8883/mqtt', { // Dirección segura WebSocket mqtt
+// app.use(mqttVueHook, 'ws://classpip.upc.edu:8000/mqtt', {
 // app.use(mqttVueHook, 'mqtt://localhost:8083', {
 // app.use(mqttVueHook, 'mqtt://192.168.1.46:8000', {
 // app.use(mqttVueHook, 'mqtt://192.168.137.1:8000', {
