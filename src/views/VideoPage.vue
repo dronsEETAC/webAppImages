@@ -1,95 +1,139 @@
 <template>
   <ion-page>
+
     <ion-header :translucent="true">
       <ion-toolbar>
-        <ion-title color="white">Camera actions</ion-title>
+        <ion-title>Video App</ion-title>
       </ion-toolbar>
-    </ion-header> 
-    <ion-content>
-      <ion-row>
-        <ion-col col-1>
-          <ion-button style="width:100%" color="primary" @click="startVideoStream" v-if="capturing">Start video stream</ion-button>
-        </ion-col>
-        <ion-col col-2>
-          <ion-button style="width:100%" color="danger" @click="stopVideoStream" v-if="!capturing">Stop video stream</ion-button>
-        </ion-col>
-        <ion-col col-3>
-          <video ref="videoElement" style="width: 100%; height: auto;"></video>
-        </ion-col>
-      </ion-row>
-      <canvas style = "margin-left: 5%; margin-top: 5%; width: 60%; height: 70%; border-style: solid" id = "output"></canvas>
-    </ion-content>
+    </ion-header>    
+    
+    <div style="display:flex; justify-content: center;">
+      <div style ="display: flex; justify-content: center;">
+        <canvas ref="canvasOut" style="border-style: solid; width: 300px; height: 400px;" id="output"></canvas>
+      </div>
+    </div>
+    <div style="background-color: blue; display: none">
+      <video ref="myVideo"></video>
+      <canvas ref="myCanvas"></canvas>
+    </div>
+    <div style="display:flex; justify-content: center;">
+      <div style ="display: flex; justify-content: center;">
+        <ion-button style="border-style: solid; width: 200px; height: 100px;" @click="selectFront" v-if="!front">Back camera</ion-button>
+        <ion-button style="border-style: solid; width: 200px; height: 100px;" @click="selectBack" v-if="front">Front camera</ion-button>
+      </div>
+    </div>
+    <div style="display:flex; justify-content: center;">
+      <div style ="display: flex; justify-content: center;">
+        <ion-button style="border-style: solid; width: 200px; height: 100px;" @click="startCapture" v-if="!capturing">Start Recording</ion-button>
+        <ion-button style="border-style: solid; width: 200px; height: 100px;" @click="stopCapture" v-if="capturing">Stop Recording</ion-button>
+      </div>
+    </div>
+      
   </ion-page>
 </template>
 
-<script lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonRow, IonCol, IonItem, IonSelect, IonSelectOption, IonList, IonButton } from '@ionic/vue';
+<script>
+import { IonHeader, IonPage, IonTitle, IonToolbar, IonButton } from '@ionic/vue';
 import { defineComponent, ref, onMounted } from 'vue';
-import cv from 'opencv.js';
-import { useMQTT } from 'mqtt-vue-hook';
-
-const mqttHook = useMQTT() 
-export  default defineComponent({
-  name: 'Tab2Page',
-  components:{
-    IonContent,IonHeader,IonPage,IonTitle,IonToolbar, IonRow, IonCol, IonItem, IonSelect, IonSelectOption, IonList, IonButton
-  }, 
+import { useMQTT } from 'mqtt-vue-hook'
+import * as cv from 'opencv.js'
+export default defineComponent({
+  name: 'HomePage',
+  components: { 
+    IonHeader, IonToolbar, IonPage, IonTitle, IonButton
+  },
+  mounted(){
+    this.myVideo = this.$refs.myVideo;
+    this.myCanvas = this.$refs.myCanvas;
+    this.capturing = false;
+    this.canvasOut = this.$refs.canvasOut.getContext('2d');
+    this.front = false;
+  },
+  methods:{
+    startCapture() {    
+      let camera = undefined        
+      if (this.front)
+        camera = { video: true, audio: false, facingMode: 'environment'}
+      else
+        camera = { audio: false, video: { facingMode: { exact: "environment" } } }
+      //navigator.mediaDevices.getUserMedia({ video: true, audio: false, facingMode: 'environment'}).then(stream => {
+      navigator.mediaDevices.getUserMedia(camera).then(stream => {
+      //  navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: { exact: "environment" } } }  ).then(stream => {
+        if(this.myVideo){
+          this.myStream = stream;
+          this.myVideo.srcObject = this.myStream;
+          const playPromise = this.myVideo.play();
+          if(playPromise !== undefined){
+            this.initCanvas();
+            this.capturing = true;
+          }
+          else{
+            console.log("Error no se ha reproducido correctamente el video");
+          }
+        }           
+      }).catch(error => {
+          console.log(error);
+      })
+    },
+    initCanvas(){
+      this.myCanvas.setAttribute('width', 300)
+      this.myCanvas.setAttribute('height', 400)
+      const context = this.myCanvas.getContext('2d');
+      let jpg_video;
+      this.interval = setInterval(() => {
+        context.drawImage(this.myVideo, 0,0, 300, 400);
+        jpg_video = this.myCanvas.toDataURL("image/jpeg").split(';base64,')[1];                            
+        this.mqttHook.publish("videoFrame",jpg_video);   
+        this.showVideo(this.myCanvas.toDataURL("image/jpeg"));         
+      }, 200);
+    },
+    stopCapture(){
+      this.myStream.getTracks().forEach(function(track) {
+          track.stop();
+      });
+      clearInterval(this.interval);            
+      this.capturing = false;     
+    },
+    showVideo(video) {   
+      const vid = new Image();        
+      vid.src = video;
+      vid.onload = () => { 
+        let dst = cv.imread (vid);
+        cv.imshow ('output',dst);
+      }
+    },    
+    selectFront (){
+      this.front = true
+    },
+    selectBack () {
+      this.front = false
+    }
+  },
 
   data() {        
     return{
-      capturing: false,
+      myVideo: null,          
+      myStream: null,
+      interval: null,
+      capturing: null,      
+      front: null,
+      canvasOut: null,       
+      myCanvas: null
     }
   }, 
-
-  setup() {
-
-    onMounted(() => {
-
-      let camera = undefined 
-      
-      // tenemos que registrar eventos en especifico
-      mqttHook.registerEvent('cameraService/IonicTutorial/videoFrame', (topic, message) => {
-        
-        console.log ('recibo frame')
-
-        const img = new Image();
-        img.src = "data:image/jpg;base64,"+message;
-
-        img.onload = () =>{
-          let dst = new cv.Mat();
-          dst = cv.imread(img);
-
-          cv.imshow('output', dst);
-        };
-
-        img.onerror = (error) => {
-          console.error('Error al cargar la imagen:', error);
-        };        
-      })
-    })
-
-    function startVideoStream(){
-      mqttHook.subscribe(["cameraService/IonicTutorial/videoFrame"], 1);
-      mqttHook.publish("IonicTutorial/cameraService/startVideoStream", "",1);
-    
-    
-    }
-
-    function stopVideoStream(){
-      mqttHook.publish("IonicTutorial/cameraService/stopVideoStream", "",1)
-    }
-
+  setup () {
+    const mqttHook = useMQTT(); 
     return {
-      startVideoStream, stopVideoStream
-    }
-  } 
-});
-
+      mqttHook
+    };
+  }
+})
 </script>
 
 <style scoped>
 #container {
   text-align: center;
+  
   position: absolute;
   left: 0;
   right: 0;
@@ -105,7 +149,9 @@ export  default defineComponent({
 #container p {
   font-size: 16px;
   line-height: 22px;
+  
   color: #8c8c8c;
+  
   margin: 0;
 }
 
