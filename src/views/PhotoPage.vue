@@ -25,7 +25,6 @@
     <div style="display:flex; justify-content: center;">
       <div style ="display: flex; justify-content: center;">
         <ion-button style="border-style: solid; width: 200px; height: 100px;" @click="startCapture" v-if="!capturing">Take picture</ion-button>
-        <ion-button style="border-style: solid; width: 200px; height: 100px;" @click="stopCapture" v-if="capturing">Stop taking pictures</ion-button>
       </div>
     </div>
       
@@ -64,10 +63,11 @@ export default defineComponent({
           this.myVideo.srcObject = this.myStream;
           const playPromise = this.myVideo.play();
           if(playPromise !== undefined){
-            this.initCanvas()
-            this.capturing = true;
+            setTimeout(() => {
+              this.initCanvas();
+            }, 500);
           }
-        }             
+        }     
       }).catch(error => {
           console.log(error);
       })
@@ -78,19 +78,10 @@ export default defineComponent({
       const context = this.myCanvas.getContext('2d');
       let jpg_as_text;
       let data;
-      this.interval = setInterval(() => {
-        context.drawImage(this.myVideo, 0,0, 300, 400);
-        jpg_as_text = this.myCanvas.toDataURL("image/jpeg").split(';base64,')[1];               
-        this.mqttHook.publish("screenshotFrame",jpg_as_text);  
-        this.showImage(this.myCanvas.toDataURL("image/jpeg"));            
-      }, 200);
-    },
-    stopCapture(){
-      this.myStream.getTracks().forEach(function(track) {
-          track.stop();
-      });
-      clearInterval(this.interval);            
-      this.capturing = false;     
+      context.drawImage(this.myVideo, 0,0, 300, 400);
+      jpg_as_text = this.myCanvas.toDataURL("image/jpeg").split(';base64,')[1];               
+      this.mqttHook.publish("screenshotFrame",jpg_as_text);  
+      this.showImage(this.myCanvas.toDataURL("image/jpeg")); 
     },
     showImage(image) {   
       const img = new Image();        
