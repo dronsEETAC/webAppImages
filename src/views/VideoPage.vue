@@ -85,7 +85,7 @@ export default defineComponent({
         jpg_video = this.myCanvas.toDataURL("image/jpeg").split(';base64,')[1];                            
         this.mqttHook.publish("videoFrame",jpg_video);   
         this.showVideo(this.myCanvas.toDataURL("image/jpeg"));         
-      }, 100);
+      }, 200);
     },
     stopCapture(){
       this.myStream.getTracks().forEach(function(track) {
