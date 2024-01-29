@@ -1,9 +1,11 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
-import HomePage from '../views/HomePage.vue';
+import PanoramicaPage from '../views/PanoramicaPage.vue';
 import VideoPage from '../views/VideoPage.vue';
 import PhotoPage from '../views/PhotoPage.vue';
 import TabsPage from '../views/TabsPage.vue';
+import FilePage from '../views/VideoFile.vue';
+import ControlPage from '../views/ControlPage.vue';
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -12,9 +14,9 @@ const routes: Array<RouteRecordRaw> = [
     component: TabsPage,
     children: [
       {
-        path: '/home',
-        name: 'Home',
-        component: HomePage,
+        path: '/panoramica',
+        name: 'panoramica',
+        component: PanoramicaPage,
       },
       {
         path: '/video',
@@ -25,7 +27,7 @@ const routes: Array<RouteRecordRaw> = [
         path: '/photo',
         name: 'photo',
         component: PhotoPage,
-      }
+      },
     ]
   },
 ]

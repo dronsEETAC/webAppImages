@@ -27,12 +27,12 @@ import '@ionic/vue/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
-/*import BootstrapVue3  from 'bootstrap-vue-3'
+import BootstrapVue3  from 'bootstrap-vue-3'
 import  BootstrapVueIcons  from 'bootstrap-vue-3'
  
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue-3/dist/bootstrap-vue-3.css'
-import 'bootstrap-icons/font/bootstrap-icons.css'*/
+import 'bootstrap-icons/font/bootstrap-icons.css'
 
 
 
@@ -46,7 +46,7 @@ app.use(IonicVue);
 app.use(router);   
 app.provide('emitter', emitter);
 
-app.use(mqttVueHook, 'wss://classpip.upc.edu:8883/mqtt', { // Dirección segura WebSocket mqtt
+app.use(mqttVueHook, 'wss://broker.hivemq.com:8884/mqtt', { // Dirección segura WebSocket mqtt
 // app.use(mqttVueHook, 'ws://classpip.upc.edu:8000/mqtt', {
 // app.use(mqttVueHook, 'mqtt://localhost:8083', {
 // app.use(mqttVueHook, 'mqtt://192.168.1.46:8000', {
@@ -61,6 +61,8 @@ app.use(mqttVueHook, 'wss://classpip.upc.edu:8883/mqtt', { // Dirección segura 
 })
 
 router.isReady().then(() => {
+  app.use(BootstrapVue3)
+  app.use(BootstrapVueIcons)
   app.mount('#app');
 });
 
