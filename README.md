@@ -1,8 +1,7 @@
 # Web App Circo Imagenes
 
-![IMG_8492](https://github.com/anna22itu/WebAppCircoImagenes/assets/80980228/0cb20422-b324-46c0-8e49-9a06af1895dd)
-![IMG_8493](https://github.com/anna22itu/WebAppCircoImagenes/assets/80980228/2ee1ae57-fa88-420b-85df-c6f2462e3b6f)
-![IMG_8494](https://github.com/anna22itu/WebAppCircoImagenes/assets/80980228/7c6755af-0ed0-42dc-98d7-4bec21f16924)
+<img width="1341" alt="Captura de pantalla 2024-02-03 221117" src="https://github.com/anna22itu/WebAppCircoImagenes/assets/80980228/7a8934a3-09a5-40af-b839-9723b625d594">
+
 
 
 1. General Information
