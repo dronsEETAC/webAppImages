@@ -8,8 +8,7 @@
 1. General Information
 
    The Web App Circo Imagenes is an application created and displayed on top of the web browser.
-   This module is a front-end desktop module in the form of WebApps, developed using Vue and Ionic, that allows to capture images in three different formats; images, panoramas and videos.
-   It has three different tabs: 'Home', 'Video' and 'Photo', look at the Figure to see the distribution of it.
+   This module is a front-end desktop module in the form of WebApps, developed using Vue and Ionic, that allows to capture images in three different formats;           images, panoramas and videos.
    
 2. Module
    
