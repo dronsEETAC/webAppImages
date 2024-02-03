@@ -1,4 +1,4 @@
-# Web App Circo Imagenes
+# Web App Circo Imágenes
 
 <img width="1341" alt="Captura de pantalla 2024-02-03 221117" src="https://github.com/anna22itu/WebAppCircoImagenes/assets/80980228/7a8934a3-09a5-40af-b839-9723b625d594">
 
@@ -7,14 +7,14 @@
 1. General Information
 
    The Web App Circo Imagenes is an application created and displayed on top of the web browser.
-   This module is a front-end desktop module in the form of WebApps, developed using Vue and Ionic, that allows to capture images in three different formats;           images, panoramas and videos.
+   This module is a front-end desktop module in the form of WebApps, developed using Vue and Ionic. It allows capturing images in three different formats;           images, panoramas and videos.
    
 2. Module
    
    It has three different tabs: 'Photo', 'Panoramica' and 'Videos', look at the Figure above to see the distribution of it.
-   - Photo Page:
-   - Panoramica Page:
-   - Videos Page: 
+   - Photo Page: It allows the reception of the images sent by the circus and the viewing of the gallery of all images received.
+   - Panoramica Page: It allows the reception and download of panoramic photos sent by the circus.
+   - Videos Page: It allows streaming reception of the drone camera transmission and viewing of the video files sent by the circus.
 
 4. Demos
    
