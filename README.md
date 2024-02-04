@@ -4,23 +4,23 @@
 
 
 
-1. General Information
+## 1. General Information
 
    The Web App Circo Imagenes is an application created and displayed on top of the web browser.
    This module is a front-end desktop module in the form of WebApps, developed using Vue and Ionic. It allows capturing images in three different formats;           images, panoramas and videos.
    
-2. Module
+## 2. Module
    
    It has three different tabs: 'Photo', 'Panoramica' and 'Videos', look at the Figure above to see the distribution of it.
    - Photo Page: It allows the reception of the images sent by the circus and the viewing of the gallery of all images received.
    - Panoramica Page: It allows the reception and download of panoramic photos sent by the circus.
    - Videos Page: It allows streaming reception of the drone camera transmission and viewing of the video files sent by the circus.
 
-4. Demos
+## 3. Demos
    
    This video is a short demo of some of the functionalities of the Mobile APP.
    
-5. Installation
+ ## 4. Installation
 
    In order to run and contribute to the modules in this block, you need to install Node.js (version v16.14.2) and @vue/cli version 4.5.15 and @ionic/cli (in case of the Mobile app).
 
@@ -32,7 +32,7 @@
    npm run serve
    ```
 
-6. Secure WebApps
+## 5. Secure WebApps
 
    WebApps are more accessible than Desktop applications. You do not need to install anything in your computer or mobile device. You only need a browser and internet connection.
    Some of the WebApps require access to sensible data in the mobile device (location, microphone, camera). This requires secure (https) access to the WebApps. See the tutorial referred bellow to learn how to implement secure WebApps.
