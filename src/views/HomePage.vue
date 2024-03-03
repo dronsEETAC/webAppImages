@@ -27,7 +27,7 @@ export  default defineComponent({
   },
   setup(){
     const mqttHook = useMQTT()
-    let broker = ref('hivemq');
+    let broker = ref('dronseetac');
     onMounted(() =>{
       //mqttHook.publish("IonicTutorial/gate/connectPlatform","")
     })
@@ -35,7 +35,7 @@ export  default defineComponent({
       mqttHook.disconnect()
     
       if (broker.value == "dronseetac") {
-        mqttHook.connect(`wss://broker.hivemq.com:8884/mqtt`, {
+        mqttHook.connect(`ws://broker.hivemq.com:8000/mqtt`, {
           clean: false,
           keepalive: 60,
           clientId: `mqtt_client_${Math.random().toString(16).substring(2, 10)}`,
@@ -43,7 +43,7 @@ export  default defineComponent({
         })
         broker.value = "hivemq";
       } else {
-        mqttHook.connect(`wss://dronseetac.upc.edu:8883/mqtt`, {
+        mqttHook.connect(`ws://dronseetac.upc.edu:8000/mqtt`, {
           clean: false,
           keepalive: 60,
           clientId: `mqtt_client_${Math.random().toString(16).substring(2, 10)}`,

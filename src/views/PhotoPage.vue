@@ -52,7 +52,7 @@ export default defineComponent({
   setup() {
     const mqttHook = useMQTT();
     const count = ref(0);
-    const imagenURL = ref('/public/entrada.png');
+    const imagenURL = ref('/public/entrada2.png');
     const imageList = ref<string[]>([]);
     const showGal = ref(false);
     const currentImageIndex = ref(0); 

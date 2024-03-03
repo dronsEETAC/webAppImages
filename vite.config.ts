@@ -19,14 +19,14 @@ export default defineConfig({
     host: "dronseetac.upc.edu",
           port: 8106,
 
-    https: {
-      cert: './localhost.crt',
-      key: './localhost.key',
-      //key: fs.readFileSync('/etc/letsencrypt/live/dronseetac.upc.edu/privkey.pem'),
-      //cert: fs.readFileSync('/etc/letsencrypt/live/dronseetac.upc.edu/cert.pem'),
-      //ca: fs.readFileSync('/etc/letsencrypt/live/dronseetac.upc.edu/chain.pem')
+    // https: {
+    //   cert: './localhost.crt',
+    //   key: './localhost.key',
+    //   //key: fs.readFileSync('/etc/letsencrypt/live/dronseetac.upc.edu/privkey.pem'),
+    //   //cert: fs.readFileSync('/etc/letsencrypt/live/dronseetac.upc.edu/cert.pem'),
+    //   //ca: fs.readFileSync('/etc/letsencrypt/live/dronseetac.upc.edu/chain.pem')
 
-    },
+    // },
 
   },
   /*test: {

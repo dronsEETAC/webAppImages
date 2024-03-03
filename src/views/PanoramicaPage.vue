@@ -5,15 +5,16 @@
         <ion-title class="ion-text-center" style="font-size: 1em;">PANORAMIC PAGE</ion-title>
       </ion-toolbar>
     </ion-header>
-      <div v-if = "ya == 1" style="display: flex; position: relative;">
+      <div v-if = "recibido" style="display: flex; position: relative;">
         <img :src="imagenURL"  class = "rotate90"/>
       </div>
-      <div v-if = "ya == 0" style="display: flex; position: relative;">
+      <div v-if = "!recibido" style="display: flex; position: relative;">
         <img :src="imagenURL"/>
       </div>
 
       <div style ="display: flex; justify-content: center">
-        <ion-button fill ="solid" style="border-style: default; width: 220px; height: 40px;" @click="descargarImagen">Descargar Panoramica</ion-button>
+        <ion-button v-if = "recibido" fill="solid" expand = 'full' color='success' @click="descargarImagen">Descargar foto de grupo</ion-button>
+        <ion-button v-if = "!recibido"  fill="solid" expand = 'full'>Esperando foto de grupo</ion-button>
       </div>
   </ion-page>
 </template>
@@ -32,8 +33,8 @@ export default defineComponent({
   setup() {
     const mqttHook = useMQTT();
     const count = ref(0);
-    let ya = ref (0);
-    const imagenURL = ref('/public/entrada.png');
+    let recibido = ref (false);
+    let imagenURL = ref('/public/entrada.png');
     //const imagenURL = ref<string | null>(null);
 
     const mostrarImagen = () => {
@@ -47,7 +48,7 @@ export default defineComponent({
         const imageUrl = "data:image/jpg;base64," + message;
         imagenURL.value = imageUrl;
         console.log("Imagen recibida")
-        ya.value = 1
+        recibido.value = true
       })
     };
 
@@ -59,6 +60,8 @@ export default defineComponent({
         a.click();
         count.value++;
         console.log("Imagen descargada")
+        recibido.value = false
+        imagenURL.value = '/public/entrada.png';
       }
     };
 
@@ -73,7 +76,7 @@ export default defineComponent({
       count,
       imagenURL,
       descargarImagen,
-      ya
+      recibido
     };
   }
 });
