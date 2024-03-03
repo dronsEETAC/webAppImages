@@ -5,16 +5,16 @@
         <ion-title class="ion-text-center" style="font-size: 1em;">PANORAMIC PAGE</ion-title>
       </ion-toolbar>
     </ion-header>
-    <div style="display: flex; margin-top: 50px; margin-left: 20px; margin-right: 20px; position: relative; margin-bottom: 50px;">
-      <div style="display: flex; position: relative;">
-        <img :src="imagenURL" v-if="imagenURL" style="position: relative; width: 100%; height: 90%; top: -120px;" />
+      <div v-if = "ya == 1" style="display: flex; position: relative;">
+        <img :src="imagenURL"  class = "rotate90"/>
       </div>
-    </div>
-    <div class="descarga" style="display:flex; justify-content: center; height: 300px;">
-      <div style ="display: flex; justify-content: center;">
+      <div v-if = "ya == 0" style="display: flex; position: relative;">
+        <img :src="imagenURL"/>
+      </div>
+
+      <div style ="display: flex; justify-content: center">
         <ion-button fill ="solid" style="border-style: default; width: 220px; height: 40px;" @click="descargarImagen">Descargar Panoramica</ion-button>
       </div>
-    </div>
   </ion-page>
 </template>
 
@@ -32,6 +32,7 @@ export default defineComponent({
   setup() {
     const mqttHook = useMQTT();
     const count = ref(0);
+    let ya = ref (0);
     const imagenURL = ref('/public/entrada.png');
     //const imagenURL = ref<string | null>(null);
 
@@ -46,6 +47,7 @@ export default defineComponent({
         const imageUrl = "data:image/jpg;base64," + message;
         imagenURL.value = imageUrl;
         console.log("Imagen recibida")
+        ya.value = 1
       })
     };
 
@@ -71,6 +73,7 @@ export default defineComponent({
       count,
       imagenURL,
       descargarImagen,
+      ya
     };
   }
 });
@@ -109,5 +112,12 @@ export default defineComponent({
   position: absolute;
   top:550px;
   left:100px;
+}
+.rotate90 {
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
 }
 </style>

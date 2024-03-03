@@ -5,7 +5,9 @@
         <ion-title class="ion-text-center">VIDEO PAGE</ion-title>
       </ion-toolbar>
     </ion-header>
-    <div class="mensajeRecibido" v-if="videoRecibido">¡Video recibido!</div>
+    <div class = 'mensajeRecibido' v-if="estado == 'recibido'">¡Video recibido!</div>
+    <div class = 'mensajeRecibido' v-if="estado == 'esperando'">¡Esperando el video!</div>
+
     <div style="display: flex; margin-top: 50px; margin-left: 20px; margin-right: 20px; position: relative; ">
       <div style="display: flex; position: relative;" v-if = "showGal">
         <video :src="videoURL" v-if="videoURL" style="position: relative; width: 70%; height: 70%; top: -10px; left:60px" controls muted></video>
@@ -16,16 +18,10 @@
         <canvas id="mycanvas" class="thumbnail-video" width="350" height="400"></canvas>
       </div>
     </div>
-    <div class="gallery" style="display:flex; justify-content: center; height: 300px; ">
-      <div style ="display: flex; justify-content: center;">
-        <ion-button v-if = "!showGal" fill="solid"  style="border-style: default; width: 100px; height: 40px;" @click="showVideos">Videos</ion-button>
-        <ion-button v-if = "showGal"  fill="solid" style="border-style: default; width: 100px; height: 40px;" @click="goBack">Back</ion-button>
-      </div>
-    </div>
-    <div class="descarga" v-if = "showGal" style="display:flex; justify-content: center; height: 300px;">
-      <div style ="display: flex; justify-content: center;">
-        <ion-button fill ="solid" style="border-style: default; width: 200px; height: 40px;" @click="descargarVideo">Descargar Video</ion-button>
-      </div>
+    <div>
+        <ion-button v-if = "estado == 'mostrando'" fill="solid"  expand = 'full'>Mostrando video</ion-button>
+        <ion-button v-if = "estado == 'fin'" fill="solid"  expand = 'full'>Esperando envio del video</ion-button>
+        <ion-button v-if = "estado == 'recibido'" fill="solid" expand = 'full' color='success' @click="descargarVideo">Descargar video</ion-button>
     </div>
   </ion-page>
 </template>
@@ -46,57 +42,63 @@ export default defineComponent({
   
   setup() {
     const mqttHook = useMQTT();
-    const showGal = ref(false);
-    const videoURL = ref<string | null>(null);
-    //const videoURL = ref('/public/entrada.png');
+    //const videoURL = ref<string | null>(null);
+    const videoURL = ref('/public/entrada.png');
     //const videoURL = ref('/entrada.mp4');
     const videoList = ref<string[]>([]);
     const count = ref(0);
     const videoRecibido = ref(false);
-
+    const esperandoVideo = ref (true);
+    const estado = ref ('esperando')
     const mostrarVideo = () => {
 
       mqttHook.subscribe(['VideoAnna'], 2);
-      console.log('suscribe')
+      mqttHook.subscribe(['finVideoAnna'], 2);
+
+      console.log('suscribe');
+      mqttHook.registerEvent('finVideoAnna', (topic, message) => {
+         console.log ('fin del video');
+         estado.value = 'fin';
+      });
       mqttHook.registerEvent('VideoAnna', (topic, message) => {
+        if (estado.value != 'fin') {
+           estado.value = 'mostrando';
+           const image = "data:image/jpeg;base64," + message;
 
-        console.log('message',message)
-
-        const image = "data:image/jpeg;base64," + message;
-
-        //const canvas = document.createElement('canvas');
-        //const canvas = document.getElementById('mycanvas');
-        //const canvas = document.querySelector('.thumbnail') as HTMLCanvasElement;
-        const canvas = document.getElementById('mycanvas') as HTMLCanvasElement;
+           //const canvas = document.createElement('canvas');
+           //const canvas = document.getElementById('mycanvas');
+           //const canvas = document.querySelector('.thumbnail') as HTMLCanvasElement;
+           const canvas = document.getElementById('mycanvas') as HTMLCanvasElement;
 
 
-        const ctx = canvas.getContext('2d');
-        const img = new Image();
+           const ctx = canvas.getContext('2d');
+           const img = new Image();
 
-        if (!canvas) {
-          console.error('Canvas not found');
-          return;
+           if (!canvas) {
+             console.error('Canvas not found');
+             return;
+           }
+
+           //canvas.width = 350;         
+           //canvas.height = 400;
+
+           if (!ctx) {
+             console.error('2D context not available');
+             return;
+           }
+
+           img.onload = () => {
+             canvas.width = img.width;         
+             canvas.height = img.height;
+             ctx.clearRect(0, 0, canvas.width, canvas.height);
+             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+             /**setInterval(() => {
+               ctx.clearRect(0, 0, canvas.width, canvas.height);
+               ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+             },25);*/
+           };
+           img.src = image;
         }
-
-        //canvas.width = 350;         
-        //canvas.height = 400;
-
-        if (!ctx) {
-          console.error('2D context not available');
-          return;
-        }
-
-        img.onload = () => {
-          canvas.width = img.width;         
-          canvas.height = img.height;
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          /**setInterval(() => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          },25);*/
-        };
-        img.src = image;
       });
     };
 
@@ -104,7 +106,7 @@ export default defineComponent({
       mqttHook.subscribe(["FileAnna"],0);
       mqttHook.registerEvent('FileAnna', (topic, message) => {
 
-        console.log("Video recibido")
+        console.log("Empiezo Video recibido")
         //const videoBlob = new Blob([message], { type: 'video/mp4' });
         //const videoUrl = URL.createObjectURL(videoBlob);
         const videoUrl = "data:video/mp4;base64," + message;
@@ -123,8 +125,12 @@ export default defineComponent({
 
         //newVideo.playbackRate = 0.25;
         document.body.appendChild(newVideo);
+        console.log ('despues del appen')
         //newVideo.play();
-        videoRecibido.value = true;
+        //videoRecibido.value = true;
+        //esperandoVideo.value = true;
+        estado.value = 'recibido'
+        
 
         //videoList.value.push(videoUrl);
         console.log("File in gallery")
@@ -132,7 +138,6 @@ export default defineComponent({
     };
 
     const descargarVideo = () => {
-      videoRecibido.value = false;
       if (videoURL.value) {
         const a = document.createElement('a');
         a.href = videoURL.value;
@@ -145,6 +150,13 @@ export default defineComponent({
 
         count.value ++;
         console.log("Video descargado")
+        const canvas = document.getElementById('mycanvas') as HTMLCanvasElement;
+        const ctx = canvas.getContext('2d');
+        canvas.width = 350;
+        canvas.height = 400;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        estado.value = 'esperando'
       }
     };
 
@@ -172,9 +184,10 @@ export default defineComponent({
       goBack,
       recibirVideo,
       count,
-      showGal,
       videoURL,
-      videoRecibido
+      videoRecibido,
+      esperandoVideo,
+      estado
     };
   },
 });
@@ -213,15 +226,14 @@ export default defineComponent({
 .mensajeRecibido{
   position: absolute;
   top: 80px; 
-  left: 130px;
+  left: 10px; 
   color: white;
   font-size: 24px; 
 }
 
 .gallery{
   position: absolute;
-  top:540px;
-  left:150px;
+  top:600px;
 }
 
 .descarga{
@@ -239,7 +251,7 @@ export default defineComponent({
 }
 
 .video-container{
-  margin-bottom: 165px;
+  margin-bottom: 200px;
 }
 
 .video-item {

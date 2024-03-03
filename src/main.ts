@@ -1,4 +1,4 @@
-
+  
 // https://ionic.io/ionicons
 // https://medium.com/@anmol.sinha1993/configure-angular-ionic-apps-with-open-ssl-certificate-to-run-them-securely-over-https-locally-4b2cd3ba3fc9
   
@@ -47,6 +47,7 @@ app.use(router);
 app.provide('emitter', emitter);
 
 app.use(mqttVueHook, 'wss://broker.hivemq.com:8884/mqtt', { // Dirección segura WebSocket mqtt
+//app.use(mqttVueHook, 'wss://dronseetac.upc.edu:8883/mqtt', {
 // app.use(mqttVueHook, 'ws://classpip.upc.edu:8000/mqtt', {
 // app.use(mqttVueHook, 'mqtt://localhost:8083', {
 // app.use(mqttVueHook, 'mqtt://192.168.1.46:8000', {

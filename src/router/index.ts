@@ -6,6 +6,7 @@ import PhotoPage from '../views/PhotoPage.vue';
 import TabsPage from '../views/TabsPage.vue';
 import FilePage from '../views/VideoFile.vue';
 import ControlPage from '../views/ControlPage.vue';
+import HomePage from '../views/HomePage.vue';
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -13,6 +14,12 @@ const routes: Array<RouteRecordRaw> = [
     path: '/',
     component: TabsPage,
     children: [
+      {
+        path: '/home',
+        name: 'Home',
+        component: HomePage,
+      },
+
       {
         path: '/panoramica',
         name: 'panoramica',
