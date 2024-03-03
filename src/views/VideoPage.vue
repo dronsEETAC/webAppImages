@@ -53,16 +53,20 @@ export default defineComponent({
     const mostrarVideo = () => {
 
       mqttHook.subscribe(['VideoAnna'], 2);
+      mqttHook.subscribe(['inicioVideoAnna'], 2);
       mqttHook.subscribe(['finVideoAnna'], 2);
 
       console.log('suscribe');
+      mqttHook.registerEvent('inicioVideoAnna', (topic, message) => {
+         console.log ('inicio del video');
+         estado.value = 'mostrando';
+      });
       mqttHook.registerEvent('finVideoAnna', (topic, message) => {
          console.log ('fin del video');
          estado.value = 'fin';
       });
       mqttHook.registerEvent('VideoAnna', (topic, message) => {
-        if (estado.value != 'fin') {
-           estado.value = 'mostrando';
+        if (estado.value == 'mostrando') {
            const image = "data:image/jpeg;base64," + message;
 
            //const canvas = document.createElement('canvas');
